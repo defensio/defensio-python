@@ -70,7 +70,7 @@ class TestDefensio(unittest.TestCase):
     status, res = self.client.post_profanity_filter(doc)
     self.assertEqual(200, status)
     self.assertEqual('Hey... how is it going?', res['defensio-result']['good'])
-    self.assertEqual('some ***ing cursing here', res['defensio-result']['bad'])
+    self.assertEqual('some ****ing cursing here', res['defensio-result']['bad'])
 
 if __name__ == '__main__':
   unittest.main()

@@ -22,57 +22,68 @@ class Defensio(object):
     self.api_key = api_key
 
   def get_user(self):
-    """ GETs user info for this api_key """
+    """ Get information about the api key """
     return self._call('GET', self._generate_url_path())
 
   def post_document(self, data):
-    """ POSTs a new document to defensio
-    data -- A dictionary representing the new document
+    """
+    Create and analyze a new document
+    data -- A Dictionary representing the new document
     """
     data.update({ 'client' : CLIENT })
     return self._call('POST', self._generate_url_path('documents'), data)
 
   def get_document(self, signature):
-    """ GETs the Defensio result for a document
+    """ 
+    Get the status of an existing document
     signature -- The signature of the desired document
     """
     return self._call('GET', self._generate_url_path('documents', signature))
 
   def put_document(self, signature, data):
-    """ PUTs (Changes the status) of an existing defensio document
+    """ 
+    Modify the properties of an existing document
     signature -- The signature for the desired document
-    data      -- A dictionary with the new allowed value eg. {'allow': false}
+    data      -- A Dictionary with the new allowed value eg. {'allow': false}
     """
     return self._call('PUT', self._generate_url_path('documents', signature), data)
 
   def get_basic_stats(self):
-    """ GETs Basic usage/accuracy stats """
+    """ Get basic statistics for the current user """
     return self._call('GET', self._generate_url_path('basic-stats'))
 
   def get_extended_stats(self, data):
-    """ GETs Extended usage/accuracy stats 
+    """ 
+    Get more exhaustive statistics for the current user
     data -- A dictionary with the range of dates you want the stats for {'from': '2010/01/01', 'to': '2010/01/10'}
     """
     return self._call('GET', self._generate_url_path('extended-stats'))
 
   def post_profanity_filter(self, data):
-    """ POSTs data that will be filtered by a predefined dictionary.
-        data -- Fields to be filtered
+    """ 
+    Filter a set of values based on a pre-defined dictionary
+    data -- Fields to be filtered
     """
     return self._call('POST', self._generate_url_path('profanity-filter'), data)
 
   def handle_post_document_async_callback(self, request):
-    self._parse_body(str(request))
+    """
+    Takes the request string of an async request callback and returns a Dictionary
+    request -- String posted by Defensio as a callback
+    """
+    return self._parse_body(str(request))
 
   def _call(self, method, path, data=None):
+    """ Do the actual HTTP request """
     conn = httplib.HTTPConnection(API_HOST)
+    headers = {'User-Agent' : USER_AGENT}
 
     if data:
-      headers = {'Content-type': 'application/x-www-form-urlencoded'}
+      headers.update( {'Content-type': 'application/x-www-form-urlencoded'} )
       conn.request(method, path, urllib.urlencode(data), headers)
 
     else:
-      conn.request(method, path)
+      conn.request(method, path, None, headers)
 
     response = conn.getresponse()
     result   =  [response.status, self._parse_body(response.read())]

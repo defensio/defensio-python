@@ -7,6 +7,7 @@ from defensio import *
 class TestDefensio(unittest.TestCase):
 
   def setUp(self):
+    # Set this to an actual key before running tests
     self.api_key  = 'key'
     self.client = Defensio(self.api_key)
 

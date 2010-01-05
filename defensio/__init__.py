@@ -3,8 +3,7 @@ import httplib
 import json
 
 API_VERSION = '2.0'
-#API_HOST    = 'api.defensio.com'
-API_HOST = 'localhost:3000'
+API_HOST    = 'api.defensio.com'
 LIB_VERSION = '0.9'
 ROOT_NODE   = 'defensio-result'
 FORMAT      = 'json'

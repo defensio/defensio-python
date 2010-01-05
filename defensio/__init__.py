@@ -29,20 +29,21 @@ class Defensio(object):
     """ POSTs a new document to defensio
     data -- A dictionary representing the new document
     """
-    return self._call('POST', self._generate_url_path('document'), data)
+    data.update({ 'client' : CLIENT })
+    return self._call('POST', self._generate_url_path('documents'), data)
 
   def get_document(self, signature):
     """ GETs the Defensio result for a document
     signature -- The signature of the desired document
     """
-    return self._call('GET', self._generate_url_path('document', signature))
+    return self._call('GET', self._generate_url_path('documents', signature))
 
   def put_document(self, signature, data):
     """ PUTs (Changes the status) of an existing defensio document
     signature -- The signature for the desired document
     data      -- A dictionary with the new allowed value eg. {'allow': false}
     """
-    return self._call('PUT', self._generate_url_path('document', signature), data)
+    return self._call('PUT', self._generate_url_path('documents', signature), data)
 
   def get_basic_stats(self):
     """ GETs Basic usage/accuracy stats """

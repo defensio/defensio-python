@@ -57,7 +57,7 @@ class Defensio(object):
     Get more exhaustive statistics for the current user
     data -- A dictionary with the range of dates you want the stats for {'from': '2010/01/01', 'to': '2010/01/10'}
     """
-    return self._call('GET', self._generate_url_path('extended-stats'))
+    return self._call('GET', self._generate_url_path('extended-stats') + '?' + urllib.urlencode(data))
 
   def post_profanity_filter(self, data):
     """ 

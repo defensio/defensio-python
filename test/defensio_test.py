@@ -1,5 +1,6 @@
 import unittest
 import sys
+sys.path.append('.')
 from defensio import *
 
 
@@ -71,6 +72,21 @@ class TestDefensio(unittest.TestCase):
     self.assertEqual(200, status)
     self.assertEqual('Hey... how is it going?', res['defensio-result']['good'])
     self.assertEqual('some ****ing cursing here', res['defensio-result']['bad'])
+
+  def testBasicStats(self):
+    status, res = self.client.get_basic_stats()
+    self.assertEqual(200, status)
+    result_body = res['defensio-result']
+    self.assertEqual('success', result_body['status'])
+    self.assertEqual(set([u'status', u'false-positives', u'false-negatives', u'unwanted', u'legitimate', 
+      u'learning', u'api-version', u'learning-status', u'message', u'accuracy']), set(result_body.keys()))
+
+  def testExtendedStats(self):
+    data = {'from' : '2010-01-01', 'to' : '2010-01-04'}
+    status, res = self.client.get_extended_stats(data)
+    self.assertEqual(200, status)
+    result_body = res['defensio-result']
+    self.assertEqual('success', res['defensio-result']['status'])
 
 if __name__ == '__main__':
   unittest.main()

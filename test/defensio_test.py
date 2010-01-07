@@ -1,6 +1,5 @@
 import unittest
 import sys
-sys.path.append('.')
 from defensio import *
 
 
@@ -12,9 +11,9 @@ class TestDefensio(unittest.TestCase):
     self.client = Defensio(self.api_key)
 
   def testGenerateUrls(self):
-    self.assertEqual('/2.0/users/key.json', self.client._generate_url_path())
-    self.assertEqual('/2.0/users/key/action1.json', self.client._generate_url_path('action1'))
-    self.assertEqual('/2.0/users/key/action1/id1.json', self.client._generate_url_path('action1', 'id1'))
+    self.assertEqual("/2.0/users/" + self.api_key + ".json", self.client._generate_url_path())
+    self.assertEqual("/2.0/users/" + self.api_key + "/action1.json"%locals(), self.client._generate_url_path('action1'))
+    self.assertEqual("/2.0/users/" + self.api_key + "/action1/id1.json"%locals(), self.client._generate_url_path('action1', 'id1'))
 
   def testGetUser(self):
     status, result =  self.client.get_user()
@@ -68,6 +67,7 @@ class TestDefensio(unittest.TestCase):
   def testProfanityFilter(self):
     doc = {'bad' : 'some fucking cursing here', 'good' : 'Hey... how is it going?'}
     status, res = self.client.post_profanity_filter(doc)
+    self.failIfEqual(403, status, "Seems like the profanity filter is not enabled for key: " + self.api_key  + " ")
     self.assertEqual(200, status)
     self.assertEqual('Hey... how is it going?', res['defensio-result']['good'])
     self.assertEqual('some ****ing cursing here', res['defensio-result']['bad'])

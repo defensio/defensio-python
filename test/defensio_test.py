@@ -8,7 +8,7 @@ class TestDefensio(unittest.TestCase):
 
   def setUp(self):
     # Set this to an actual key before running tests
-    self.api_key  = 'key'
+    self.api_key  = 'retrainer_key'
     self.client = Defensio(self.api_key)
 
   def testGenerateUrls(self):
@@ -50,7 +50,7 @@ class TestDefensio(unittest.TestCase):
     self.assertEqual('2.0', str(result_body['api-version']))
     self.assertAlmostEqual(0.05, result_body['spaminess'])
     self.assertEqual('legitimate', result_body['classification'])
-    self.assertEqual(None, result_body['profanity-match'])
+    self.assert_(result_body['profanity-match'] == False or result_body['profanity-match'] == None)
     self.assertTrue(result_body['allow'])
 
     self.assertEqual(unicode, type( result_body['signature'] ))
@@ -70,8 +70,8 @@ class TestDefensio(unittest.TestCase):
     status, res = self.client.post_profanity_filter(doc)
     self.failIfEqual(403, status, "Seems like the profanity filter is not enabled for key: " + self.api_key  + " ")
     self.assertEqual(200, status)
-    self.assertEqual('Hey... how is it going?', res['defensio-result']['good'])
-    self.assertEqual('some ****ing cursing here', res['defensio-result']['bad'])
+    self.assertEqual('Hey... how is it going?', res['defensio-result']['filtered']['good'])
+    self.assertEqual('some ****ing cursing here', res['defensio-result']['filtered']['bad'])
 
   def testBasicStats(self):
     status, res = self.client.get_basic_stats()

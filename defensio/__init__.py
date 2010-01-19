@@ -1,5 +1,15 @@
-import urllib
-import httplib
+import sys
+
+def is_python3():
+  return sys.version_info[0] == 3
+
+if is_python3():
+  import urllib.parse
+  import http.client
+else:
+  import urllib
+  import httplib
+
 import json
 
 API_VERSION = '2.0'
@@ -57,7 +67,7 @@ class Defensio(object):
     Get more exhaustive statistics for the current user
     data -- A dictionary with the range of dates you want the stats for {'from': '2010/01/01', 'to': '2010/01/10'}
     """
-    return self._call('GET', self._generate_url_path('extended-stats') + '?' + urllib.urlencode(data))
+    return self._call('GET', self._generate_url_path('extended-stats') + '?' + self._urlencode(data))
 
   def post_profanity_filter(self, data):
     """ 
@@ -75,12 +85,16 @@ class Defensio(object):
 
   def _call(self, method, path, data=None):
     """ Do the actual HTTP request """
-    conn = httplib.HTTPConnection(API_HOST)
+    if is_python3():
+      conn = http.client.HTTPConnection(API_HOST)
+    else:
+      conn = httplib.HTTPConnection(API_HOST)
+
     headers = {'User-Agent' : USER_AGENT}
 
     if data:
       headers.update( {'Content-type': 'application/x-www-form-urlencoded'} )
-      conn.request(method, path, urllib.urlencode(data), headers)
+      conn.request(method, path, self._urlencode(data), headers)
 
     else:
       conn.request(method, path, None, headers)
@@ -99,7 +113,17 @@ class Defensio(object):
 
   def _parse_body(self, body):
     """ For just call a deserializer for FORMAT"""
-    return json.loads(body)
+    if is_python3():
+      return json.loads(body.decode('UTF-8'))
+    else:
+      return json.loads(body)
+
+  def _urlencode(self, url):
+      if is_python3():
+        return urllib.parse.urlencode(url)
+      else:
+        return urllib.urlencode(url)
+
 
 def handle_post_document_async_callback(request):
   """ Shortcut function to handle callbacks """

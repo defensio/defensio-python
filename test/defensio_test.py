@@ -3,8 +3,10 @@ import sys
 sys.path.append('.')
 from defensio import *
 
-
 class TestDefensio(unittest.TestCase):
+
+  def is_python3(self):
+    return sys.version_info[0] == 3
 
   def setUp(self):
     # Set this to an actual key before running tests
@@ -25,7 +27,11 @@ class TestDefensio(unittest.TestCase):
     self.assertEqual('',        result_body['message'])
     self.assertEqual('2.0',     result_body['api-version'])
 
-    self.assertEqual(unicode, type(result_body['owner-url']))
+    if self.is_python3():
+      self.assertEqual(str, type(result_body['owner-url']))
+    else:
+      self.assertEqual(unicode, type(result_body['owner-url']))
+
     self.assertTrue(len(result_body['owner-url']) > 0 )
 
   def testPostDocumentWhenFail(self):
@@ -52,8 +58,11 @@ class TestDefensio(unittest.TestCase):
     self.assertEqual('legitimate', result_body['classification'])
     self.assert_(result_body['profanity-match'] == False or result_body['profanity-match'] == None)
     self.assertTrue(result_body['allow'])
-
-    self.assertEqual(unicode, type( result_body['signature'] ))
+    
+    if self.is_python3():
+      self.assertEqual(str, type( result_body['signature'] ))
+    else:
+      self.assertEqual(unicode, type( result_body['signature'] ))
 
     signature = result_body['signature']
 
@@ -78,8 +87,7 @@ class TestDefensio(unittest.TestCase):
     self.assertEqual(200, status)
     result_body = res['defensio-result']
     self.assertEqual('success', result_body['status'])
-    self.assertEqual(set([u'status', u'false-positives', u'false-negatives', u'unwanted', u'legitimate', 
-      u'learning', u'api-version', u'learning-status', u'message', u'accuracy']), set(result_body.keys()))
+    self.assertEqual(set(['status', 'false-positives', 'false-negatives', 'unwanted', 'legitimate', 'learning', 'api-version', 'learning-status', 'message', 'accuracy']), set(result_body.keys()))
 
   def testExtendedStats(self):
     data = {'from' : '2010-01-01', 'to' : '2010-01-04'}

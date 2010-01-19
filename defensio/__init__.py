@@ -81,7 +81,7 @@ class Defensio(object):
     Takes the request string of an async request callback and returns a Dictionary
     request -- String posted by Defensio as a callback
     """
-    return self._parse_body(str(request))
+    return self._parse_body(request)
 
   def _call(self, method, path, data=None):
     """ Do the actual HTTP request """

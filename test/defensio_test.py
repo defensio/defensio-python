@@ -96,5 +96,11 @@ class TestDefensio(unittest.TestCase):
     result_body = res['defensio-result']
     self.assertEqual('success', res['defensio-result']['status'])
 
+  def testHandlePostDocumentAsyncCallback(self):
+    if self.is_python3():
+      handle_post_document_async_callback( b'{"defensio-result": {"status": "success"}}' )
+    else:
+      handle_post_document_async_callback( '{"defensio-result": {"status": "success"}}' )
+
 if __name__ == '__main__':
   unittest.main()

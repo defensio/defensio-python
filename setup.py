@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name = 'defensio',
-    version = '0.9',
+    version = '0.9.1',
     url = "http://github.com/defensio/defensio-python",
     description = 'Official Python library for Defensio 2.0',
     author = 'Camilo Lopez',

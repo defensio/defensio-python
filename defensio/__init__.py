@@ -14,7 +14,7 @@ import json
 
 API_VERSION = '2.0'
 API_HOST    = 'api.defensio.com'
-LIB_VERSION = '0.9'
+LIB_VERSION = '0.9.1'
 ROOT_NODE   = 'defensio-result'
 FORMAT      = 'json'
 USER_AGENT  = "Defensio-Python %(LIB_VERSION)s"%locals()
